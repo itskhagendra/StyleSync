@@ -1,6 +1,8 @@
 ﻿using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.Core;
 using UnityEngine;
+using System.Collections;
+using System;
 
 namespace ReadyPlayerMe.Samples.AvatarCreatorWizard
 {
@@ -10,6 +12,8 @@ namespace ReadyPlayerMe.Samples.AvatarCreatorWizard
         [SerializeField] private AvatarConfig inGameConfig;
 
         private AvatarObjectLoader avatarObjectLoader;
+
+        public static event Action<GameObject> OnAvatarLoaded;
 
         private void OnEnable()
         {
@@ -32,10 +36,22 @@ namespace ReadyPlayerMe.Samples.AvatarCreatorWizard
             avatarObjectLoader.OnCompleted += (sender, args) =>
             {
                 AvatarAnimationHelper.SetupAnimator(args.Metadata, args.Avatar);
+                GameObject Go = args.Avatar.gameObject;
                 DebugPanel.AddLogWithDuration("Created avatar loaded", Time.time - startTime);
+                OnAvatarLoaded?.Invoke(Go);
             };
 
             avatarObjectLoader.LoadAvatar($"{Env.RPM_MODELS_BASE_URL}/{avatarId}.glb");
+        }
+
+        private IEnumerator SetAvatarTransformNextFrame(GameObject avatar)
+        {
+            yield return null; // Wait 1 frame
+
+            avatar.transform.position = new Vector3(0, 0, -7f);
+            avatar.transform.rotation = Quaternion.Euler(0, 180, 0);
+
+            Debug.Log("Avatar position and rotation set after a frame.");
         }
     }
 }

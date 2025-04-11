@@ -63,6 +63,7 @@ public class UIController : MonoBehaviour
         StartText.text = startText;
         StartPanel.SetActive(true);
         ExitPanel.SetActive(false);
+        StartCoroutine(CountdownToStart());
     }
     void OnGameStarted()
     {
@@ -75,7 +76,8 @@ public class UIController : MonoBehaviour
     {
         for (int i = countdownTime; i > 0; i--)
         {
-            StartText.text = string.Format(startText, i);
+            StartText.text = "Starting in "+ i.ToString() + " seconds...";
+            Debug.Log("Countdown " + i.ToString());
             yield return new WaitForSeconds(1f);
         }
         EventManager.InvokeOnGameStarted();

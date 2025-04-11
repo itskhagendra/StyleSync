@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using ReadyPlayerMe.Samples.AvatarCreatorWizard;
 
 public class EventManager : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class EventManager : MonoBehaviour
     public static event Action OnGameStarted;
     public static event Action OnGameEnded;
 
+    void OnEnable()
+    {
+        // GameManager.OnAvatarLoaded += SetAvatarPosition;
+    }
     public static void InvokeOnPlayerJoined()
     {
         OnPlayerJoined?.Invoke();
@@ -29,4 +34,10 @@ public class EventManager : MonoBehaviour
     {
         OnGameEnded?.Invoke();
     }
+
+    // void SetAvatarPosition(GameObject Character)
+    // {
+    //     Character.transform.position = new Vector3(0,0,-7);
+    //     Character.transform.rotation =  Quaternion.Euler(0, 180, 0);
+    // }
 }

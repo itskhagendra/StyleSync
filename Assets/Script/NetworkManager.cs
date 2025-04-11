@@ -5,6 +5,8 @@ using System.Collections;
 using System.Linq;
 using TMPro;
 using UnityEngine.SceneManagement;
+using ReadyPlayerMe.AvatarCreator;
+using ReadyPlayerMe.Core;
 
 
 public class StartGameMessage
@@ -22,16 +24,23 @@ public class NetworkManager : MonoBehaviour
     public NetworkRunner runner;
     public NetworkPrefabRef playerPrefab;
     [SerializeField] private TMP_InputField RoomNameInputField;
+    [SerializeField] private GameObject RPMUICanvas;
     public int minPlayers = 4;
 
     public List<NetworkObject> players = new List<NetworkObject>();
     public bool gameStarted = false;
+    public bool isAvatarloaded = false;
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_StartGame()
     {
         Debug.Log("Game is starting on all clients!");
         gameStarted = true;
+    }
+
+    void OnEnable()
+    {
+        RPMUICanvas.SetActive(false);  
     }
 
     public void OnJoinRoomButtonClick()
@@ -74,6 +83,7 @@ public class NetworkManager : MonoBehaviour
         {
             runner.Spawn(playerPrefab, new Vector3(player.PlayerId * 2, 1, 0), Quaternion.identity, player);
             EventManager.InvokeOnPlayerJoined();
+            RPMUICanvas.SetActive(true);
         }
 
         if (runner.ActivePlayers.ToList().Count() == minPlayers)
@@ -93,11 +103,22 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
+    // public void OnAvatarLoaded(GameObject Avatar)
+    // {
+    //     Debug.Log("Avatar loaded: " + Avatar.name);
+    //     var Go = runner.GetPlayerObject(runner.LocalPlayer);
+    //     Avatar.transform.SetParent(Go.transform);
+    //     Avatar.transform.localPosition = Vector3.zero;
+    //     isAvatarloaded = true;
+    //     OnPlayerJoined(runner, runner.LocalPlayer);
+    // }
+
     IEnumerator StartGameCountdown()
     {
         yield return new WaitForSeconds(10f);
         EventManager.InvokeOnGameStarted();
         gameStarted = true;
+        RPMUICanvas.SetActive(true);
         // var serverPlayer = runner.SessionInfo.GetPlayerByIndex(0);
         // runner.SendUserMessage(runner.serverPlayer, new StartGameMessage("Start Game"));
     }
