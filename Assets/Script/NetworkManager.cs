@@ -115,7 +115,6 @@ public class NetworkManager : MonoBehaviour
     IEnumerator StartGameCountdown()
     {
         yield return new WaitForSeconds(10f);
-        EventManager.InvokeOnGameStarted();
         gameStarted = true;
         RPMUICanvas.SetActive(true);
         // var serverPlayer = runner.SessionInfo.GetPlayerByIndex(0);

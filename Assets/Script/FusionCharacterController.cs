@@ -20,7 +20,7 @@ public class FusionCharacterController : NetworkBehaviour
 
     public Camera MainCamera;
 
-     public override void Spawned()
+    public override void Spawned()
     {
         MainCamera.gameObject.SetActive(true);
     }

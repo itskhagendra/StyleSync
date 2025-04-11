@@ -7,6 +7,7 @@ public class SyncAvatar : NetworkBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] GameObject AvatarPrefab;
+    [SerializeField] GameObject MainCamera;
     void OnEnable(){
         Debug.Log("has INput Autority " + this.HasInputAuthority);
         GameManager.OnAvatarLoaded += SetAvatarPosition;
@@ -22,6 +23,11 @@ public class SyncAvatar : NetworkBehaviour
             Debug.Log("Transfer Avatar Position Set on State Authority");
             AvatarPrefab.SetActive(true);
             Debug.Log("Avatar Prefab Set to true");
+            EventManager.InvokeOnGameStarted();
+
+            MainCamera.transform.SetParent(this.gameObject.transform);
+            MainCamera.transform.rotation = Quaternion.Euler(0, 0, 0);
+
         }
     }
 }

@@ -74,13 +74,14 @@ public class UIController : MonoBehaviour
     }
     IEnumerator CountdownToStart()
     {
-        for (int i = countdownTime; i > 0; i--)
+        for (int i = countdownTime; i >= 0; i--)
         {
             StartText.text = "Starting in "+ i.ToString() + " seconds...";
             Debug.Log("Countdown " + i.ToString());
             yield return new WaitForSeconds(1f);
         }
-        EventManager.InvokeOnGameStarted();
+        StartPanel.SetActive(false);
+        //EventManager.InvokeOnGameStarted();
     }
 
     void OnGameEnded()
