@@ -83,7 +83,6 @@ public class NetworkManager : MonoBehaviour
         {
             runner.Spawn(playerPrefab, new Vector3(player.PlayerId * 2, 1, 0), Quaternion.identity, player);
             EventManager.InvokeOnPlayerJoined();
-            RPMUICanvas.SetActive(true);
         }
 
         if (runner.ActivePlayers.ToList().Count() == minPlayers)

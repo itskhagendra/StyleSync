@@ -12,7 +12,7 @@ public class EventManager : MonoBehaviour
 
     void OnEnable()
     {
-        // GameManager.OnAvatarLoaded += SetAvatarPosition;
+        GameManager.OnAvatarLoaded += SetAvatarPosition;
     }
     public static void InvokeOnPlayerJoined()
     {
@@ -35,9 +35,8 @@ public class EventManager : MonoBehaviour
         OnGameEnded?.Invoke();
     }
 
-    // void SetAvatarPosition(GameObject Character)
-    // {
-    //     Character.transform.position = new Vector3(0,0,-7);
-    //     Character.transform.rotation =  Quaternion.Euler(0, 180, 0);
-    // }
+    void SetAvatarPosition(GameObject Character)
+    {
+       Character.SetActive(false);
+    }
 }

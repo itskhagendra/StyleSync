@@ -43,15 +43,5 @@ namespace ReadyPlayerMe.Samples.AvatarCreatorWizard
 
             avatarObjectLoader.LoadAvatar($"{Env.RPM_MODELS_BASE_URL}/{avatarId}.glb");
         }
-
-        private IEnumerator SetAvatarTransformNextFrame(GameObject avatar)
-        {
-            yield return null; // Wait 1 frame
-
-            avatar.transform.position = new Vector3(0, 0, -7f);
-            avatar.transform.rotation = Quaternion.Euler(0, 180, 0);
-
-            Debug.Log("Avatar position and rotation set after a frame.");
-        }
     }
 }
