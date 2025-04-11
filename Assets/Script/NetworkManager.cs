@@ -1,11 +1,21 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Fusion;
-using System;
+using System.Collections;
 using System.Linq;
 using TMPro;
 using UnityEngine.SceneManagement;
 
+
+public class StartGameMessage
+{
+    public string Command;
+
+    public StartGameMessage(string Message)
+    {
+        Command = Message;
+    }
+}
 
 public class NetworkManager : MonoBehaviour
 {
@@ -16,6 +26,13 @@ public class NetworkManager : MonoBehaviour
 
     public List<NetworkObject> players = new List<NetworkObject>();
     public bool gameStarted = false;
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_StartGame()
+    {
+        Debug.Log("Game is starting on all clients!");
+        gameStarted = true;
+    }
 
     public void OnJoinRoomButtonClick()
     {
@@ -62,7 +79,8 @@ public class NetworkManager : MonoBehaviour
         if (runner.ActivePlayers.ToList().Count() == minPlayers)
         {
             Debug.Log("All players joined! Starting game...");
-            // Load game scene or trigger game start logic
+            EventManager.InvokeOnGameReadyToStart();
+            StartCoroutine(StartGameCountdown());
         }
     }
 
@@ -73,5 +91,14 @@ public class NetworkManager : MonoBehaviour
             runner.Despawn(playerObject);
             Debug.Log("Player object despawned for Player ID: " + player.PlayerId);
         }
+    }
+
+    IEnumerator StartGameCountdown()
+    {
+        yield return new WaitForSeconds(10f);
+        EventManager.InvokeOnGameStarted();
+        gameStarted = true;
+        // var serverPlayer = runner.SessionInfo.GetPlayerByIndex(0);
+        // runner.SendUserMessage(runner.serverPlayer, new StartGameMessage("Start Game"));
     }
 }
