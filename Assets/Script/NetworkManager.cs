@@ -7,7 +7,8 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.Core;
-
+using Photon.Voice.Unity;
+using Photon.Realtime;
 
 public class StartGameMessage
 {
@@ -25,6 +26,7 @@ public class NetworkManager : MonoBehaviour
     public NetworkPrefabRef playerPrefab;
     [SerializeField] private TMP_InputField RoomNameInputField;
     [SerializeField] private GameObject RPMUICanvas;
+    // [SerializeField] private voiceConnection voiceConnection;
     public int minPlayers = 4;
 
     public List<NetworkObject> players = new List<NetworkObject>();
@@ -70,7 +72,12 @@ public class NetworkManager : MonoBehaviour
             SceneManager = sceneManager
         });
 
-        if (!result.Ok)
+        if (result.Ok)
+        {
+            Debug.Log("Fusion connected!");
+            ConnectVoice(roomName);
+        }
+        else
         {
             Debug.LogError("Failed to start: " + result.ShutdownReason);
         }
@@ -81,7 +88,7 @@ public class NetworkManager : MonoBehaviour
         Debug.Log("Player Joined: " + player.PlayerId);
         if (runner.IsServer)
         {
-            runner.Spawn(playerPrefab, new Vector3(player.PlayerId * 2, 1, 0), Quaternion.identity, player);
+            runner.Spawn(playerPrefab, new Vector3(0, 0, runner.ActivePlayers.ToList().Count()), Quaternion.identity, player);
             EventManager.InvokeOnPlayerJoined();
         }
 
@@ -119,5 +126,13 @@ public class NetworkManager : MonoBehaviour
         RPMUICanvas.SetActive(true);
         // var serverPlayer = runner.SessionInfo.GetPlayerByIndex(0);
         // runner.SendUserMessage(runner.serverPlayer, new StartGameMessage("Start Game"));
+    }
+
+    private void ConnectVoice(string roomName)
+    {
+        // voiceConnection.Client.UserId = runner.LocalPlayer.PlayerId.ToString();
+        // voiceConnection.Client.AppId = PhotonNetwork.PhotonServerSettings.AppSettings.AppIdVoice;
+        // voiceConnection.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings);
+        // voiceConnection.Client.OpJoinOrCreateRoom(new EnterRoomParams { RoomName = roomName });
     }
 }

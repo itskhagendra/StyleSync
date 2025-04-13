@@ -22,7 +22,8 @@ public class FusionCharacterController : NetworkBehaviour
 
     public override void Spawned()
     {
-        MainCamera.gameObject.SetActive(true);
+        if(HasInputAuthority)
+            MainCamera.gameObject.SetActive(true);
     }
 
     public override void FixedUpdateNetwork()
